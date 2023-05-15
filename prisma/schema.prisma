@@ -11,19 +11,98 @@ datasource db {
 }
 
 model User {
-  id         Int       @id @default(autoincrement())
-  firstName  String    @map("first_name") @db.VarChar(100)
-  lastName   String    @map("last_name") @db.VarChar(100)
-  phone      String?   @db.VarChar(150)
-  email      String    @unique
-  username   String    @unique @db.VarChar(200)
-  address    String?   @db.VarChar(200)
-  gender     String?   @db.VarChar(100)
-  birthDate  DateTime  @db.Date
-  countryId  Int?      @map("country_id")
-  city       String?   @db.VarChar(200)
-  documentId Int?
-  createdAt  DateTime  @default(now()) @map("created_at")
-  updatedAt  DateTime  @updatedAt @map("updated_at")
-  deletedAt  DateTime? @map("deleted_at")
+  idUser       Int           @id @default(autoincrement()) @map("id_user")
+  role         Role          @default(user)
+  firstName    String        @map("first_name") @db.VarChar(100)
+  lastName     String        @map("last_name") @db.VarChar(100)
+  phone        String?       @db.VarChar(150)
+  email        String        @unique
+  username     String        @unique @db.VarChar(200)
+  address      String?       @db.VarChar(200)
+  gender       String?       @db.VarChar(100)
+  birthDate    DateTime      @db.Date
+  countryId    Int?          @map("country_id")
+  city         String?       @db.VarChar(200)
+  documentId   Int?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Transaction {
+  idTransaction Int                 @id @default(autoincrement()) @map("id_transaction")
+  idUser        Int                 @map("id_user")
+  amount        Int
+  category      TransactionCategory
+  status        TransactionStatus
+  idBet         Int?                @map("id_bet")
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+  deletedAt     DateTime?           @map("deleted_at")
+  user          User                @relation(fields: [idUser], references: [idUser])
+  bet           Bet?                @relation(fields: [idBet], references: [idBet])
+
+  @@map("transactions")
+}
+
+model Bet {
+  idBet        Int           @id @default(autoincrement()) @map("id_bet")
+  betOption    Int           @map("bet_option")
+  name         String        @db.VarChar(200)
+  odd          Decimal       @db.Decimal(10, 2)
+  result       BetResult?
+  status       BetStatus     @default(active)
+  idEvent      Int           @map("id_event")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  deletedAt    DateTime?     @map("deleted_at")
+  transactions Transaction[]
+  event        Event         @relation(fields: [idEvent], references: [idEvent])
+
+  @@map("bets")
+}
+
+model Event {
+  idEvent     Int       @id @default(autoincrement()) @map("id_event")
+  name        String    @db.VarChar(200)
+  sport       String    @db.VarChar(200)
+  description String    @db.VarChar(200)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  bets Bet[]
+
+  @@map("events")
+}
+
+enum Role {
+  admin
+  user
+}
+
+enum TransactionCategory {
+  deposit
+  withdraw
+  bet
+  winning
+}
+
+enum TransactionStatus {
+  active
+  canceled
+}
+
+enum BetStatus {
+  active
+  canceled
+  settled
+}
+
+enum BetResult {
+  win
+  lose
 }
