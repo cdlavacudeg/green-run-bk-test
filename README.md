@@ -30,6 +30,7 @@ $ pnpm run start:prod
 - `npx prisma migrate dev --name initial-migration --create-only` -> [Add prisma to a project](https://www.prisma.io/docs/guides/database/developing-with-prisma-migrate/add-prisma-migrate-to-a-project)
 - `npx prisma migrate resolve --applied {nombre_migración}` -> Mark the migration as applied
 - `npx prisma db pull --schema {filepath}`
+- `npx prisma db seed` -> Run Prisma seeder
 
 # Branch naming
 
