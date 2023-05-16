@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { AuthDto } from './dtos';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Get('users')
-  async getUsers() {
-    return this.authService.getUsers();
+  @Post('login')
+  async login(@Body() dto: AuthDto) {
+    return this.authService.login(dto);
   }
 }

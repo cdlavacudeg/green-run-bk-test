@@ -8,5 +8,8 @@ export default registerAs('config', () => {
     prisma: {
       databaseUrl: process.env.DATABASE_URL,
     },
+    jwt: {
+      loginSecret: process.env.JWT_LOGIN_SECRET,
+    },
   };
 });

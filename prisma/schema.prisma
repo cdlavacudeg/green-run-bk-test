@@ -18,6 +18,7 @@ model User {
   phone        String?       @db.VarChar(150)
   email        String        @unique
   username     String        @unique @db.VarChar(200)
+  password     String        @db.VarChar(255)
   address      String?       @db.VarChar(200)
   gender       String?       @db.VarChar(100)
   birthDate    DateTime      @db.Date

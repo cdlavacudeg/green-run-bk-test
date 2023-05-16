@@ -5,7 +5,7 @@ import configuration from 'config/configuration';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
-  constructor(@Inject(configuration.KEY) private configService: ConfigType<typeof configuration>) {
+  constructor(@Inject(configuration.KEY) configService: ConfigType<typeof configuration>) {
     super({
       datasources: {
         db: {
