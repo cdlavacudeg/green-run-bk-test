@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto, RegisterDto } from './dtos';
 import * as bcrypt from 'bcrypt';
@@ -51,6 +51,25 @@ export class AuthService {
   }
 
   async register(dto: RegisterDto) {
+    const usernameInDb = await this.prisma.user.findUnique({
+      where: {
+        username: dto.username,
+      },
+    });
+
+    if (usernameInDb) {
+      throw new BadRequestException('Invalid username');
+    }
+    const emailInDb = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (emailInDb) {
+      throw new BadRequestException('Invalid email');
+    }
+
     const user = await this.prisma.user.create({
       data: {
         role: dto.role,
