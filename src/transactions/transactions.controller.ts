@@ -5,23 +5,26 @@ import { GetUser, LocationIdUser, RequestLocation, RoleOptions } from 'src/auth/
 import { OwnershipGuard, JwtAuthGuard } from 'src/auth/guards';
 import { RoleGuard } from 'src/auth/guards/role.guard';
 import { CreateTransactionDto } from './dtos';
+import { TransactionsService } from './transactions.service';
 
 @ApiTags('Transactions')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('transactions')
 export class TransactionsController {
+  constructor(private transactionsService: TransactionsService) {}
+
   @Get('/')
   @LocationIdUser(RequestLocation.query)
   @UseGuards(OwnershipGuard)
   async getTransactions(@Query('idUser') idUser?: number) {
-    return idUser;
+    return await this.transactionsService.getTransactions(idUser);
   }
 
   @Post('/')
   @RoleOptions(Role.user)
   @UseGuards(RoleGuard)
-  async createTransaction(@Body() dto: CreateTransactionDto, @GetUser('idUser') idUser: number) {
-    return { dto, idUser };
+  async createTransaction(@Body() dataTransaction: CreateTransactionDto, @GetUser('idUser') idUser: number) {
+    return await this.transactionsService.createTransaction(idUser, dataTransaction);
   }
 }
