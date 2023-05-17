@@ -1,6 +1,7 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards';
+import { LocationIdUser, RequestLocation } from 'src/auth/decorators/locationIdUser.decorator';
+import { OwnershipGuard, JwtAuthGuard } from 'src/auth/guards';
 
 @ApiTags('Transactions')
 @ApiBearerAuth()
@@ -8,7 +9,9 @@ import { JwtAuthGuard } from 'src/auth/guards';
 @Controller('transactions')
 export class TransactionsController {
   @Get('/')
-  async getTransactions() {
-    return 'All transactions';
+  @LocationIdUser(RequestLocation.query)
+  @UseGuards(OwnershipGuard)
+  async getTransactions(@Query('idUser') idUser?: number) {
+    return idUser;
   }
 }
