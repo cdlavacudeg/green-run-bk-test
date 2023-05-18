@@ -1,6 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { TransactionCategory } from '@prisma/client';
-import { IsEnum, IsInt, IsNotEmpty, ValidateIf } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
+
+export class GetTransactionsQueryDto {
+  @IsNotEmpty()
+  @IsInt()
+  @ApiProperty()
+  idUser: number;
+
+  @IsOptional()
+  @IsEnum(TransactionCategory)
+  @ApiProperty({
+    enum: TransactionCategory,
+  })
+  category?: TransactionCategory;
+}
 
 export class CreateTransactionDto {
   @IsNotEmpty()

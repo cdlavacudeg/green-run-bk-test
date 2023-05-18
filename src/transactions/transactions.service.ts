@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { BetResult, BetStatus, TransactionCategory, TransactionStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTransactionDto } from './dtos';
@@ -7,10 +7,11 @@ import { CreateTransactionDto } from './dtos';
 export class TransactionsService {
   constructor(private prisma: PrismaService) {}
 
-  async getTransactions(idUser: number) {
+  async getTransactions(idUser: number, options?: { category?: TransactionCategory }) {
     const listOfTransactions = await this.prisma.transaction.findMany({
       where: {
         idUser,
+        category: options?.category,
       },
       include: {
         bet: {
