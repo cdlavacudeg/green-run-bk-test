@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
 import { BetResult, BetStatus, TransactionCategory, TransactionStatus } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTransactionDto } from './dtos';
@@ -56,6 +56,30 @@ export class TransactionsService {
   }
 
   async createTransaction(idUser: number, dataTransaction: CreateTransactionDto) {
+    const transactionCategory = dataTransaction.category;
+    if (transactionCategory == TransactionCategory.bet) {
+      const bet = await this.prisma.bet.findUnique({
+        where: {
+          idBet: dataTransaction.idBet,
+        },
+      });
+
+      if (!bet) {
+        throw new BadRequestException('Invalid bet');
+      }
+
+      if (bet.status !== BetStatus.active) {
+        throw new BadRequestException('The bet is canceled or settled');
+      }
+    }
+
+    const balanceUser = await this.getBalanceUser(idUser);
+    if (transactionCategory !== TransactionCategory.deposit) {
+      if (balanceUser.balance < dataTransaction.amount) {
+        throw new BadRequestException('Insufficient balance, please make a deposit');
+      }
+    }
+
     return await this.prisma.transaction.create({
       data: {
         idUser,
