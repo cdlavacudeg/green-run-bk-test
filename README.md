@@ -34,12 +34,14 @@ $ pnpm run start:prod
 
 # Branch naming
 
-Fix → Prefix FX
-Feature → Prefix FE
-Hot-fix → Prefix HF
+- Fix → Prefix FX
+- Feature → Prefix FE
+- Hot-fix → Prefix HF
 
-estructura [Prefix][Day(dd)][Month(MM]Mes][Year(yy)]-[Basic description]
-EJ: 
-FX190423-login → Fix 19 of April 2023 on login
-FE010123-bets → Feature 01 of January 2023 on bets
-HF311223-user → Hot Fix 31 of December on user
+Estructure: [Prefix][Day(dd)][Month(MM]Mes][Year(yy)]-[Basic description]
+
+Examples: 
+
+- FX190423-login → Fix 19 of April 2023 on login
+- FE010123-bets → Feature 01 of January 2023 on bets
+- HF311223-user → Hot Fix 31 of December on user
