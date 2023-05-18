@@ -25,6 +25,7 @@ async function bootstrap() {
     .setDescription('GreenRun Backend Challenge')
     .setVersion('1.0')
     .addServer('/api/v1')
+    .addBearerAuth()
     .build();
 
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerDocumentConfig, { ignoreGlobalPrefix: true });
