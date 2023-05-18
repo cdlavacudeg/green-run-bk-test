@@ -17,7 +17,7 @@ export class TransactionsController {
   @Get('/')
   @LocationIdUser(RequestLocation.query)
   @UseGuards(OwnershipGuard)
-  async getTransactions(@Query('idUser') idUser?: number) {
+  async getTransactions(@Query('idUser') idUser: number) {
     return await this.transactionsService.getTransactions(idUser);
   }
 
@@ -26,5 +26,12 @@ export class TransactionsController {
   @UseGuards(RoleGuard)
   async createTransaction(@Body() dataTransaction: CreateTransactionDto, @GetUser('idUser') idUser: number) {
     return await this.transactionsService.createTransaction(idUser, dataTransaction);
+  }
+
+  @Get('/balance')
+  @LocationIdUser(RequestLocation.query)
+  @UseGuards(OwnershipGuard)
+  async getTransactionsBalance(@Query('idUser') idUser: number) {
+    return await this.transactionsService.getBalanceUser(idUser);
   }
 }
