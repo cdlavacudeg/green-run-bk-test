@@ -25,6 +25,7 @@ model User {
   countryId    Int?          @map("country_id")
   city         String?       @db.VarChar(200)
   documentId   Int?
+  status       UserStatus    @default(active)
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
   deletedAt    DateTime?     @map("deleted_at")
@@ -80,6 +81,11 @@ model Event {
   @@map("events")
 }
 
+enum UserStatus {
+  active
+  blocked
+}
+
 enum Role {
   admin
   user
@@ -89,7 +95,6 @@ enum TransactionCategory {
   deposit
   withdraw
   bet
-  winning
 }
 
 enum TransactionStatus {

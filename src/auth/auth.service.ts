@@ -1,10 +1,11 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthDto } from './dtos';
+import { AuthDto, RegisterDto } from './dtos';
 import * as bcrypt from 'bcrypt';
 import configuration from 'config/configuration';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { UserStatus } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,10 @@ export class AuthService {
 
     if (!user) {
       throw new UnauthorizedException('User or password incorrect');
+    }
+
+    if (user.status == UserStatus.blocked) {
+      throw new ForbiddenException('User is blocked');
     }
 
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
@@ -48,5 +53,46 @@ export class AuthService {
     });
 
     return token;
+  }
+
+  async register(dto: RegisterDto) {
+    const usernameInDb = await this.prisma.user.findUnique({
+      where: {
+        username: dto.username,
+      },
+    });
+
+    if (usernameInDb) {
+      throw new BadRequestException('Invalid username, already in use');
+    }
+
+    const emailInDb = await this.prisma.user.findUnique({
+      where: {
+        email: dto.email,
+      },
+    });
+
+    if (emailInDb) {
+      throw new BadRequestException('Invalid email, already in use');
+    }
+
+    const user = await this.prisma.user.create({
+      data: {
+        role: dto.role,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        phone: dto.phone,
+        email: dto.email,
+        username: dto.username,
+        password: await bcrypt.hash(dto.password, 10),
+        address: dto.address,
+        gender: dto.gender,
+        birthDate: dto.birthDate,
+        countryId: dto.countryId,
+        city: dto.city,
+        documentId: dto.documentId,
+      },
+    });
+    return user;
   }
 }
