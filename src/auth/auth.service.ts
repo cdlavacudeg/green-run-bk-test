@@ -1,10 +1,11 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto, RegisterDto } from './dtos';
 import * as bcrypt from 'bcrypt';
 import configuration from 'config/configuration';
 import { ConfigType } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { UserStatus } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,10 @@ export class AuthService {
 
     if (!user) {
       throw new UnauthorizedException('User or password incorrect');
+    }
+
+    if (user.status == UserStatus.blocked) {
+      throw new ForbiddenException('User is blocked');
     }
 
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
@@ -58,8 +63,9 @@ export class AuthService {
     });
 
     if (usernameInDb) {
-      throw new BadRequestException('Invalid username');
+      throw new BadRequestException('Invalid username, already in use');
     }
+
     const emailInDb = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -67,7 +73,7 @@ export class AuthService {
     });
 
     if (emailInDb) {
-      throw new BadRequestException('Invalid email');
+      throw new BadRequestException('Invalid email, already in use');
     }
 
     const user = await this.prisma.user.create({
