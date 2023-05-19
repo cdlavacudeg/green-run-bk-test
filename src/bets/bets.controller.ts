@@ -16,8 +16,6 @@ export class BetsController {
   constructor(private betsService: BetsService) {}
 
   @Get('/')
-  @RoleOptions(Role.admin)
-  @UseGuards(RoleGuard)
   async getBets(@Query() queryData: GetBetsDto) {
     return await this.betsService.getBets({ queryData });
   }
