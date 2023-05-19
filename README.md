@@ -16,7 +16,7 @@ $ pnpm run start
 ## Initial users
 Reference of initial users and events in prisma/seed.ts
 - Admin: usernames: admin{n}, password: admin{n} -> n [0,3]
-- User: usernames: user{n}, password: user{n} -> n [4,9]
+- User: usernames: user{n}, password: user{n} -> n [0,5]
 
 ## Prisma
 

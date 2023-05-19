@@ -28,5 +28,6 @@ COPY --from=dependencies /usr/src/package.json .
 COPY --from=build /usr/src/.env .
 COPY --from=build /usr/src/dist ./dist
 COPY --from=build /usr/src/node_modules ./node_modules
+COPY --from=build /usr/src/prisma/ ./prisma
 
 CMD ["node","dist/src/main.js"]
