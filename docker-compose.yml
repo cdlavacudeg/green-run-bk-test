@@ -1,6 +1,18 @@
 version: '3.8'
 
 services:
+  api:
+    build:
+      context: .
+      target: deploy
+      dockerfile: ./Dockerfile
+    command: pnpm run start:prod
+    restart: on-failure
+    ports:
+      - ${API_PORT}:${API_PORT}
+    depends_on:
+      - database
+
   database:
     image: mysql:5.7
     restart: on-failure
