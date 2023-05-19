@@ -9,17 +9,16 @@ $ pnpm install
 ## Running the app
 
 ```bash
-# development
+$ docker compose up -d database
+$ npx prisma migrate reset
 $ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
 ```
+## Initial users
+Reference of initial users and events in prisma/seed.ts
+- Admin: usernames: admin{n}, password: admin{n} -> n [0,3]
+- User: usernames: user{n}, password: user{n} -> n [4,9]
 
-# Prisma
+## Prisma
 
 - `npx prisma init` -> Init prisma
 - `npx prisma help` -> Help of prisma
@@ -31,8 +30,9 @@ $ pnpm run start:prod
 - `npx prisma migrate resolve --applied {nombre_migración}` -> Mark the migration as applied
 - `npx prisma db pull --schema {filepath}`
 - `npx prisma db seed` -> Run Prisma seeder
+- `npx prisma migrate reset` -> Reset the database
 
-# Branch naming
+## Branch naming
 
 - Fix → Prefix FX
 - Feature → Prefix FE

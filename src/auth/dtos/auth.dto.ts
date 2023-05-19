@@ -17,8 +17,10 @@ export class AuthDto {
 export class RegisterDto {
   @IsString()
   @IsNotEmpty()
-  @IsEnum(['admin', 'user'])
-  @ApiProperty()
+  @IsEnum(Role)
+  @ApiProperty({
+    enum: Role,
+  })
   role: Role;
 
   @IsString()
