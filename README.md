@@ -1,5 +1,9 @@
 # GreenRun - Backend Developer Test
 
+# Deploy on AWS
+
+- [API](http://ec2-34-207-193-237.compute-1.amazonaws.com:8085/api/v1/docs)
+
 ## Installation
 
 ```bash
